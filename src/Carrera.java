@@ -13,13 +13,6 @@ public class Carrera {
         estudiantes.add(e);
     }
 
-    public void listarEstudiantes() {
-        for (Estudiante e : estudiantes) {
-            System.out.println(e.getNombre() + " " + e.getApellido() + " - Edad: " + e.getEdad());
-        }
-    }
-
-    // Getters y Setters con validaciones
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) {
         if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("Nombre de carrera invalido");

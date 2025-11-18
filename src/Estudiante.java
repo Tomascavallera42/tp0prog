@@ -1,16 +1,12 @@
 import java.util.ArrayList;
 
-public class Estudiante {
-    private String nombre;
-    private String apellido;
-    private int edad;
+public class Estudiante extends Persona implements MiembroUniversidad {
+
     private Carrera carrera;
     private ArrayList<Materia> materias;
 
-    public Estudiante(String nombre, String apellido, int edad, Carrera carrera) {
-        setNombre(nombre);
-        setApellido(apellido);
-        setEdad(edad);
+    public Estudiante(String nombre, String apellido, int edad, String documento, Carrera carrera) {
+        super(nombre, apellido, edad, documento);
         this.carrera = carrera;
         this.materias = new ArrayList<>();
     }
@@ -19,7 +15,10 @@ public class Estudiante {
         materias.add(m);
     }
 
-    public double calcularPromedio() {
+    // -------------------------------
+    //      PROMEDIO ITERATIVO
+    // -------------------------------
+    public double calcularPromedioIterativo() {
         if (materias.isEmpty()) return 0;
         double suma = 0;
         for (Materia m : materias) {
@@ -28,27 +27,37 @@ public class Estudiante {
         return suma / materias.size();
     }
 
-    // Getters y Setters con validaciones
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("Nombre invalido");
-        this.nombre = nombre;
+    // -------------------------------
+    //      PROMEDIO RECURSIVO
+    // -------------------------------
+    public static double calcularPromedioRecursivo(Materia[] materias, int indice) {
+        if (indice == materias.length) return 0;
+        return materias[indice].getCalificacion() + calcularPromedioRecursivo(materias, indice + 1);
     }
 
-    public String getApellido() { return apellido; }
-    public void setApellido(String apellido) {
-        if (apellido == null || apellido.isEmpty()) throw new IllegalArgumentException("Apellido invalido");
-        this.apellido = apellido;
-    }
-
-    public int getEdad() { return edad; }
-    public void setEdad(int edad) {
-        if (edad < 16) throw new IllegalArgumentException("La edad debe ser mayor o igual a 16");
-        this.edad = edad;
+    public double getPromedioRecursivo() {
+        if (materias.isEmpty()) return 0;
+        Materia[] arr = materias.toArray(new Materia[0]);
+        double suma = calcularPromedioRecursivo(arr, 0);
+        return suma / materias.size();
     }
 
     public Carrera getCarrera() { return carrera; }
-    public void setCarrera(Carrera carrera) { this.carrera = carrera; }
 
-    public ArrayList<Materia> getMaterias() { return materias; }
+    @Override
+    public String obtenerRol() {
+        return "Estudiante";
+    }
+
+    @Override
+    public String obtenerInformacionCompleta() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return "[ESTUDIANTE] " + getNombre() + " " + getApellido() +
+                " - Carrera: " + carrera.getNombre() +
+                " - Promedio: " + calcularPromedioIterativo();
+    }
 }
