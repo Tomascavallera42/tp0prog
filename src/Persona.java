@@ -11,17 +11,16 @@ public class Persona {
         setDocumento(documento);
     }
 
+    // Getters y setters con validaciones básicas
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty()) 
-            throw new IllegalArgumentException("Nombre invalido");
+        if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("Nombre invalido");
         this.nombre = nombre;
     }
 
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) {
-        if (apellido == null || apellido.isEmpty()) 
-            throw new IllegalArgumentException("Apellido invalido");
+        if (apellido == null || apellido.isEmpty()) throw new IllegalArgumentException("Apellido invalido");
         this.apellido = apellido;
     }
 
@@ -33,13 +32,18 @@ public class Persona {
 
     public String getDocumento() { return documento; }
     public void setDocumento(String documento) {
-        if (documento == null || documento.isEmpty())
-            throw new IllegalArgumentException("Documento invalido");
+        if (documento == null || documento.isEmpty()) throw new IllegalArgumentException("Documento invalido");
         this.documento = documento;
     }
 
     @Override
+    public String toString() {
+        return nombre + " " + apellido + " (edad: " + edad + ", doc: " + documento + ")";
+    }
+
+    @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof Persona)) return false;
         Persona p = (Persona) o;
         return documento.equals(p.documento);
@@ -48,10 +52,5 @@ public class Persona {
     @Override
     public int hashCode() {
         return documento.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return nombre + " " + apellido + " - DNI: " + documento;
     }
 }

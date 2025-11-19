@@ -1,16 +1,29 @@
-import java.util.ArrayList;
-
 public class Carrera {
     private String nombre;
-    private ArrayList<Estudiante> estudiantes;
+    private ListaEnlazada<Estudiante> estudiantes;
 
     public Carrera(String nombre) {
         setNombre(nombre);
-        this.estudiantes = new ArrayList<>();
+        this.estudiantes = new ListaEnlazada<>();
     }
 
     public void agregarEstudiante(Estudiante e) {
-        estudiantes.add(e);
+        if (e == null) throw new IllegalArgumentException("Estudiante nulo");
+        // insertamos ordenado por apellido (opcional)
+        estudiantes.agregarOrdenado(e, (a, b) -> {
+            Estudiante ea = (Estudiante) a;
+            Estudiante eb = (Estudiante) b;
+            return ea.getApellido().compareToIgnoreCase(eb.getApellido());
+        });
+    }
+
+    public void listarEstudiantes() {
+        ListaEnlazada.Nodo<Estudiante> actual = estudiantes.getPrimero();
+        while (actual != null) {
+            Estudiante e = actual.dato;
+            System.out.println(e.getNombre() + " " + e.getApellido() + " - Edad: " + e.getEdad());
+            actual = actual.siguiente;
+        }
     }
 
     public String getNombre() { return nombre; }
@@ -19,5 +32,5 @@ public class Carrera {
         this.nombre = nombre;
     }
 
-    public ArrayList<Estudiante> getEstudiantes() { return estudiantes; }
+    public ListaEnlazada<Estudiante> getEstudiantes() { return estudiantes; }
 }

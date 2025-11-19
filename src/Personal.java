@@ -1,5 +1,4 @@
 public class Personal extends Persona implements MiembroUniversidad {
-
     private String departamento;
     private String puesto;
     private String fechaIngreso;
@@ -16,9 +15,7 @@ public class Personal extends Persona implements MiembroUniversidad {
     public String obtenerRol() { return "Personal"; }
 
     @Override
-    public String obtenerInformacionCompleta() {
-        return toString();
-    }
+    public String obtenerInformacionCompleta() { return toString(); }
 
     @Override
     public String toString() {

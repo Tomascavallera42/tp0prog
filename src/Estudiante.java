@@ -1,63 +1,58 @@
-import java.util.ArrayList;
-
 public class Estudiante extends Persona implements MiembroUniversidad {
+    private String carreraNombre;
+    private ListaEnlazada<Materia> materias;
 
-    private Carrera carrera;
-    private ArrayList<Materia> materias;
-
-    public Estudiante(String nombre, String apellido, int edad, String documento, Carrera carrera) {
+    public Estudiante(String nombre, String apellido, int edad, String documento, String carreraNombre) {
         super(nombre, apellido, edad, documento);
-        this.carrera = carrera;
-        this.materias = new ArrayList<>();
+        this.carreraNombre = carreraNombre;
+        this.materias = new ListaEnlazada<>();
     }
 
     public void agregarMateria(Materia m) {
-        materias.add(m);
+        if (m == null) throw new IllegalArgumentException("Materia nula");
+        materias.agregar(m);
     }
 
-    // -------------------------------
-    //      PROMEDIO ITERATIVO
-    // -------------------------------
     public double calcularPromedioIterativo() {
-        if (materias.isEmpty()) return 0;
+        ListaEnlazada.Nodo<Materia> actual = materias.getPrimero();
+        if (actual == null) return 0;
         double suma = 0;
-        for (Materia m : materias) {
-            suma += m.getCalificacion();
+        int contador = 0;
+        while (actual != null) {
+            suma += actual.dato.getCalificacion();
+            contador++;
+            actual = actual.siguiente;
         }
-        return suma / materias.size();
+        return contador == 0 ? 0 : suma / contador;
     }
 
-    // -------------------------------
-    //      PROMEDIO RECURSIVO
-    // -------------------------------
-    public static double calcularPromedioRecursivo(Materia[] materias, int indice) {
-        if (indice == materias.length) return 0;
-        return materias[indice].getCalificacion() + calcularPromedioRecursivo(materias, indice + 1);
+    public static double calcularPromedioRecursivoWrapper(ListaEnlazada<Materia> lista) {
+        return calcularPromedioRecursivo(lista.getPrimero(), 0, 0.0);
     }
 
-    public double getPromedioRecursivo() {
-        if (materias.isEmpty()) return 0;
-        Materia[] arr = materias.toArray(new Materia[0]);
-        double suma = calcularPromedioRecursivo(arr, 0);
-        return suma / materias.size();
+  
+    public static double calcularPromedioRecursivo(ListaEnlazada.Nodo<Materia> actual, int contador, double suma) {
+        if (actual == null) {
+            return contador == 0 ? 0 : suma / contador;
+        }
+        return calcularPromedioRecursivo(actual.siguiente, contador + 1, suma + actual.dato.getCalificacion());
     }
 
-    public Carrera getCarrera() { return carrera; }
+    public ListaEnlazada<Materia> getMaterias() { return materias; }
+
+    public String getCarreraNombre() { return carreraNombre; }
+    public void setCarreraNombre(String carreraNombre) { this.carreraNombre = carreraNombre; }
 
     @Override
-    public String obtenerRol() {
-        return "Estudiante";
-    }
+    public String obtenerRol() { return "Estudiante"; }
 
     @Override
     public String obtenerInformacionCompleta() {
-        return toString();
+        return toString() + " - Carrera: " + carreraNombre + " - Promedio(iter): " + calcularPromedioIterativo();
     }
 
     @Override
     public String toString() {
-        return "[ESTUDIANTE] " + getNombre() + " " + getApellido() +
-                " - Carrera: " + carrera.getNombre() +
-                " - Promedio: " + calcularPromedioIterativo();
+        return "[ESTUDIANTE] " + getNombre() + " " + getApellido() + " (doc: " + getDocumento() + ")";
     }
 }
