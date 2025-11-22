@@ -1,10 +1,5 @@
-public class ListaEnlazada<T> {
-    public static class Nodo<U> {
-        public U dato;
-        public Nodo<U> siguiente;
-        public Nodo(U dato) { this.dato = dato; this.siguiente = null; }
-    }
 
+public class ListaEnlazada<T> {
     private Nodo<T> primero;
     private int tamaño;
 
@@ -13,7 +8,7 @@ public class ListaEnlazada<T> {
         tamaño = 0;
     }
 
-    public void agregar(T dato) {
+    public void agregarAlFinal(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
         if (primero == null) {
             primero = nuevo;
@@ -25,28 +20,45 @@ public class ListaEnlazada<T> {
         tamaño++;
     }
 
-    public void agregarOrdenado(T dato, java.util.Comparator<T> cmp) {
+    public void agregarAlInicio(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
-        if (primero == null || cmp.compare(dato, primero.dato) <= 0) {
-            nuevo.siguiente = primero;
-            primero = nuevo;
-        } else {
-            Nodo<T> actual = primero;
-            while (actual.siguiente != null && cmp.compare(dato, actual.siguiente.dato) > 0) {
-                actual = actual.siguiente;
-            }
-            nuevo.siguiente = actual.siguiente;
-            actual.siguiente = nuevo;
-        }
+        nuevo.siguiente = primero;
+        primero = nuevo;
         tamaño++;
     }
 
-    public Nodo<T> getPrimero() { return primero; }
-    public int size() { return tamaño; }
-    public boolean isEmpty() { return tamaño == 0; }
+    public boolean estaVacia() {
+        return primero == null;
+    }
 
-    
-    public Object[] toArray() {
+    public int tamaño() {
+        return tamaño;
+    }
+
+    public Nodo<T> getPrimero() {
+        return primero;
+    }
+
+    public T quitarInicio() {
+        if (primero == null) return null;
+        T dato = primero.dato;
+        primero = primero.siguiente;
+        tamaño--;
+        return dato;
+    }
+
+    public T obtenerEnIndice(int indice) {
+        if (indice < 0 || indice >= tamaño) return null;
+        Nodo<T> actual = primero;
+        int i = 0;
+        while (i < indice) {
+            actual = actual.siguiente;
+            i++;
+        }
+        return actual.dato;
+    }
+
+    public Object[] convertirAArray() {
         Object[] arr = new Object[tamaño];
         Nodo<T> actual = primero;
         int i = 0;
@@ -57,27 +69,22 @@ public class ListaEnlazada<T> {
         return arr;
     }
 
-
-    public void rebuildFromArray(Object[] array) {
+    public void limpiar() {
         primero = null;
         tamaño = 0;
-        for (int i = 0; i < array.length; i++) {
-            @SuppressWarnings("unchecked")
-            T dato = (T) array[i];
-            agregar(dato);
-        }
     }
 
-  
-    public ListaEnlazada.Nodo<T> buscarNodoPorDocumento(String documento) {
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
         Nodo<T> actual = primero;
+        sb.append("[");
         while (actual != null) {
-            if (actual.dato instanceof Persona) {
-                Persona p = (Persona) actual.dato;
-                if (p.getDocumento().equals(documento)) return actual;
-            }
+            sb.append(actual.dato);
             actual = actual.siguiente;
+            if (actual != null) sb.append(", ");
         }
-        return null;
+        sb.append("]");
+        return sb.toString();
     }
 }

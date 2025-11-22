@@ -1,3 +1,4 @@
+
 public class Persona {
     private String nombre;
     private String apellido;
@@ -11,7 +12,6 @@ public class Persona {
         setDocumento(documento);
     }
 
-    // Getters y setters con validaciones básicas
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) {
         if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("Nombre invalido");
@@ -43,10 +43,9 @@ public class Persona {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof Persona)) return false;
         Persona p = (Persona) o;
-        return documento.equals(p.documento);
+        return this.documento.equals(p.documento);
     }
 
     @Override
